@@ -21,10 +21,10 @@ zero-downtime migrations.
 dotnet build
 ```
 
-Run the CLI from the project:
+Run the CLI:
 
 ```bash
-dotnet run --project src/CosmosDbComet -- --help
+comet --help
 ```
 
 ## Authentication
@@ -49,7 +49,7 @@ Supported auth modes:
 ## Create a Database
 
 ```bash
-dotnet run --project src/CosmosDbComet -- create-db \
+comet create-db \
 	--target "https://target.documents.azure.com:443/" \
 	--auth az-cli \
 	--database sales \
@@ -72,7 +72,7 @@ events/context/userId
 ## Clone a Database
 
 ```bash
-dotnet run --project src/CosmosDbComet -- clone-db \
+comet clone-db \
 	--source "https://source.documents.azure.com:443/" \
 	--target "https://target.documents.azure.com:443/" \
 	--auth az-cli \
@@ -85,7 +85,7 @@ dotnet run --project src/CosmosDbComet -- clone-db \
 Clone schema only:
 
 ```bash
-dotnet run --project src/CosmosDbComet -- clone-db \
+comet clone-db \
 	--source "https://source.documents.azure.com:443/" \
 	--target "https://target.documents.azure.com:443/" \
 	--auth az-cli \
@@ -96,7 +96,7 @@ dotnet run --project src/CosmosDbComet -- clone-db \
 ## Inspect a Database
 
 ```bash
-dotnet run --project src/CosmosDbComet -- inspect \
+comet inspect \
 	--source "https://source.documents.azure.com:443/" \
 	--auth az-cli \
 	--database sales
@@ -134,13 +134,13 @@ Create a compact recipe file:
 Run it:
 
 ```bash
-dotnet run --project src/CosmosDbComet -- run --from-file comet.json
+comet run --from-file comet.json
 ```
 
 Preview it without touching Cosmos DB:
 
 ```bash
-dotnet run --project src/CosmosDbComet -- run --from-file comet.json --dry-run
+comet run --from-file comet.json --dry-run
 ```
 
 ## Limits

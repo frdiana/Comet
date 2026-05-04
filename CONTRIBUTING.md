@@ -23,10 +23,10 @@ Run tests before opening a pull request:
 dotnet test
 ```
 
-Run the CLI locally:
+Run the published CLI locally:
 
 ```bash
-dotnet run --project src/CosmosDbComet -- --help
+comet --help
 ```
 
 ## Commit Messages
