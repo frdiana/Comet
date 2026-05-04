@@ -117,10 +117,16 @@ Releases are automated with release-please and GitHub Actions.
 The normal flow is:
 
 1. Merge feature and fix PRs into `main` using Conventional Commits.
-2. release-please opens or updates a release PR.
-3. Review and merge the release PR.
-4. GitHub creates the release and changelog.
+2. The release workflow runs when code, tests, project files, or release
+	workflow files change.
+3. The release workflow builds and tests the solution.
+4. release-please creates a GitHub Release directly when the commit history
+	contains releasable Conventional Commits.
 5. The release artifact workflow publishes a Windows `comet.exe` zip.
+
+Commits such as `feat: ...` and `fix: ...` create release notes and version
+bumps. Commits such as `docs: ...` or `chore: ...` may not create a release by
+themselves.
 
 The release asset is named like this:
 
