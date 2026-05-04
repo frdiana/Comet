@@ -5,7 +5,7 @@ namespace Comet.Cosmos;
 
 public sealed class DatabaseCloner(CosmosClientFactory clientFactory, DocumentCopier documentCopier)
 {
-    public async Task<CloneResult> CloneAsync(CloneDatabaseRequest request, CancellationToken cancellationToken)
+    public async Task<CloneResult> CloneAsync(CloneDatabaseRequest request, Action<string>? log, CancellationToken cancellationToken)
     {
         using var sourceClient = clientFactory.Create(request.Source);
         using var targetClient = clientFactory.Create(request.Target);
@@ -19,12 +19,17 @@ public sealed class DatabaseCloner(CosmosClientFactory clientFactory, DocumentCo
         var reachedMaxItems = false;
         var sourceContainers = await ReadContainerPropertiesAsync(sourceDatabase, cancellationToken);
 
+        log?.Invoke($"Found {sourceContainers.Count} container(s) in source database '{request.SourceDatabaseName}'");
+
         foreach (var sourceProperties in sourceContainers)
         {
             if (request.ExcludedContainers.Contains(sourceProperties.Id))
             {
+                log?.Invoke($"Skipping excluded container: {sourceProperties.Id}");
                 continue;
             }
+
+            log?.Invoke($"Cloning container: {sourceProperties.Id}...");
 
             var targetProperties = CopyContainerProperties(sourceProperties);
             var sourceContainer = sourceDatabase.GetContainer(sourceProperties.Id);
@@ -39,10 +44,16 @@ public sealed class DatabaseCloner(CosmosClientFactory clientFactory, DocumentCo
                     targetDatabase.GetContainer(sourceProperties.Id),
                     request.BatchSize,
                     request.MaxItems is null ? null : request.MaxItems - copiedItems,
+                    log,
                     cancellationToken);
 
                 copiedItems += copyResult.CopiedItems;
                 reachedMaxItems = copyResult.ReachedMaxItems;
+                log?.Invoke($"Container '{sourceProperties.Id}' done: {copyResult.CopiedItems} items copied");
+            }
+            else if (request.SchemaOnly)
+            {
+                log?.Invoke($"Container '{sourceProperties.Id}' created (schema only)");
             }
         }
 

@@ -1,6 +1,7 @@
 using Comet.Cosmos;
 using Comet.Models;
 using Comet.Parsing;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Comet.Commands;
@@ -26,7 +27,7 @@ public sealed class CloneDbCommand : AsyncCommand<CloneDbSettings>
         }
 
         var cloner = new DatabaseCloner(new CosmosClientFactory(), new DocumentCopier());
-        var result = await cloner.CloneAsync(request, cancellationToken);
+        var result = await cloner.CloneAsync(request, msg => AnsiConsole.MarkupLine(Markup.Escape(msg)), cancellationToken);
         PlanRenderer.RenderCloneResult(result);
         return 0;
     }

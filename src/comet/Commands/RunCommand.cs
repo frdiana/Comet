@@ -38,7 +38,7 @@ public sealed class RunCommand : AsyncCommand<RunSettings>
         {
             try
             {
-                var result = await cloner.CloneAsync(clone, cancellationToken);
+                var result = await cloner.CloneAsync(clone, msg => AnsiConsole.MarkupLine(Markup.Escape(msg)), cancellationToken);
                 PlanRenderer.RenderCloneResult(result);
             }
             catch (Exception ex) when (settings.ContinueOnError)

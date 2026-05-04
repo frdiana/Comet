@@ -10,6 +10,7 @@ public sealed class DocumentCopier
         Container target,
         int batchSize,
         int? maxItems,
+        Action<string>? log,
         CancellationToken cancellationToken)
     {
         if (maxItems is <= 0)
@@ -25,16 +26,21 @@ public sealed class DocumentCopier
         while (iterator.HasMoreResults)
         {
             var page = await iterator.ReadNextAsync(cancellationToken);
+            var pageCount = 0;
             foreach (var item in page)
             {
                 if (maxItems is not null && copied >= maxItems.Value)
                 {
+                    log?.Invoke($"  Batch: +{pageCount} items | Total: {copied} (max-items reached)");
                     return new DocumentCopyResult(copied, true);
                 }
 
                 await target.UpsertItemAsync(item, cancellationToken: cancellationToken);
                 copied++;
+                pageCount++;
             }
+
+            log?.Invoke($"  Batch: +{pageCount} items | Total: {copied}");
         }
 
         return new DocumentCopyResult(copied, false);
