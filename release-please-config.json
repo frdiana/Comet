@@ -1,0 +1,18 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "CosmosDbComet",
+      "changelog-path": "CHANGELOG.md",
+      "include-component-in-tag": false,
+      "include-v-in-tag": true,
+      "extra-files": [
+        {
+          "type": "xml",
+          "path": "src/CosmosDbComet/CosmosDbComet.csproj",
+          "xpath": "/Project/PropertyGroup/Version"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CosmosDbComet/CosmosDbComet.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CosmosDbComet.Tests/CosmosDbComet.Tests.csproj" />
+  </Folder>
+</Solution>

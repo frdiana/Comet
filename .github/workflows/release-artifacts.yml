@@ -1,0 +1,67 @@
+name: Release Artifacts
+
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  publish-windows:
+    name: Publish Windows executable
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ github.event.release.tag_name }}"
+          $version = $tag.TrimStart("v")
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Test
+        run: dotnet test --configuration Release --verbosity normal
+
+      - name: Publish comet.exe
+        shell: pwsh
+        run: |
+          dotnet publish src/CosmosDbComet/CosmosDbComet.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained true `
+            --output artifacts/publish/win-x64 `
+            -p:PublishSingleFile=true `
+            -p:AssemblyName=comet `
+            -p:Version=${{ steps.version.outputs.version }} `
+            -p:AssemblyVersion=${{ steps.version.outputs.version }} `
+            -p:FileVersion=${{ steps.version.outputs.version }}
+
+      - name: Package artifact
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path artifacts/package -Force | Out-Null
+          Copy-Item artifacts/publish/win-x64/comet.exe artifacts/package/comet.exe
+          Copy-Item README.md artifacts/package/README.md
+          Copy-Item LICENSE artifacts/package/LICENSE
+          Compress-Archive -Path artifacts/package/* -DestinationPath "artifacts/comet-win-x64-${{ steps.version.outputs.tag }}.zip" -Force
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: artifacts/comet-win-x64-${{ steps.version.outputs.tag }}.zip
