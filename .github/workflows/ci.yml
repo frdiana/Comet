@@ -2,9 +2,6 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
 
 permissions:
   contents: read
@@ -24,10 +21,10 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore comet.slnx
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build comet.slnx --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test --configuration Release --no-build --verbosity normal
+        run: dotnet test comet.slnx --configuration Release --no-build --verbosity normal

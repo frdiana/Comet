@@ -31,8 +31,8 @@ comet --help
 
 ## Commit Messages
 
-Use Conventional Commits. Release automation uses commit messages to prepare
-versions, changelogs, and GitHub release notes.
+Use Conventional Commits. Release automation uses commit messages to decide
+whether a push to `main` should create a new version and GitHub Release.
 
 Recommended commit types:
 
@@ -112,7 +112,8 @@ models, or recipe classes.
 
 ## Release Process
 
-Releases are automated with release-please and GitHub Actions.
+Releases are automated with GitHub Actions. The project does not use release
+branches because old release lines are not maintained.
 
 The normal flow is:
 
@@ -120,13 +121,31 @@ The normal flow is:
 2. The release workflow runs when code, tests, project files, or release
 	workflow files change.
 3. The release workflow builds and tests the solution.
-4. release-please creates a GitHub Release directly when the commit history
-	contains releasable Conventional Commits.
-5. The release artifact workflow publishes a Windows `comet.exe` zip.
+4. The workflow calculates the next SemVer tag from commits since the previous
+	`vX.Y.Z` tag.
+5. The workflow creates a GitHub Release with generated release notes.
+6. The release artifact workflow publishes a Windows `comet.exe` zip.
 
-Commits such as `feat: ...` and `fix: ...` create release notes and version
-bumps. Commits such as `docs: ...` or `chore: ...` may not create a release by
-themselves.
+Version bumps follow this mapping:
+
+* Breaking change: major version
+* `feat`: minor version
+* `fix` or `perf`: patch version
+
+Commits such as `docs: ...`, `test: ...`, `ci: ...`, or `chore: ...` do not
+create a release by themselves.
+
+Use a Conventional Commit title when squash-merging a pull request. For example:
+
+```text
+feat: add json recipe validation
+```
+
+This keeps the release calculation predictable when the merge commit becomes
+the main commit on `main`.
+
+The first release starts from `v0.0.0`. A first `feat: ...` change creates
+`v0.1.0`, while a first `fix: ...` change creates `v0.0.1`.
 
 The release asset is named like this:
 
