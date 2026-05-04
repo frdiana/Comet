@@ -124,7 +124,7 @@ The normal flow is:
 4. The workflow calculates the next SemVer tag from commits since the previous
 	`vX.Y.Z` tag.
 5. The workflow creates a GitHub Release with generated release notes.
-6. The release artifact workflow publishes a Windows `comet.exe` zip.
+6. The same workflow publishes and uploads the Windows `comet.exe` zip.
 
 Version bumps follow this mapping:
 

@@ -9,7 +9,6 @@ on:
       - tests/**
       - comet.slnx
       - .github/workflows/release.yml
-      - .github/workflows/release-artifacts.yml
 
 permissions:
   contents: write
@@ -115,3 +114,39 @@ jobs:
           gh release create "${{ steps.version.outputs.tag }}" \
             --title "${{ steps.version.outputs.tag }}" \
             --generate-notes
+
+      - name: Publish comet.exe
+        if: steps.version.outputs.release == 'true'
+        shell: bash
+        run: |
+          dotnet publish src/comet/comet.csproj \
+            --configuration Release \
+            --runtime win-x64 \
+            --self-contained true \
+            --output artifacts/publish/win-x64 \
+            -p:PublishSingleFile=true \
+            -p:AssemblyName=comet \
+            -p:Version=${{ steps.version.outputs.version }} \
+            -p:AssemblyVersion=${{ steps.version.outputs.version }} \
+            -p:FileVersion=${{ steps.version.outputs.version }}
+
+      - name: Package artifact
+        if: steps.version.outputs.release == 'true'
+        shell: bash
+        run: |
+          mkdir -p artifacts/package
+          cp artifacts/publish/win-x64/comet.exe artifacts/package/comet.exe
+          cp README.md artifacts/package/README.md
+          cp LICENSE artifacts/package/LICENSE
+          cd artifacts/package
+          zip -r "../comet-win-x64-${{ steps.version.outputs.tag }}.zip" .
+
+      - name: Upload release asset
+        if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh release upload "${{ steps.version.outputs.tag }}" \
+            "artifacts/comet-win-x64-${{ steps.version.outputs.tag }}.zip" \
+            --clobber
