@@ -40,7 +40,7 @@ jobs:
       - name: Publish comet.exe
         shell: pwsh
         run: |
-          dotnet publish src/CosmosDbComet/CosmosDbComet.csproj `
+          dotnet publish src/comet/comet.csproj `
             --configuration Release `
             --runtime win-x64 `
             --self-contained true `
@@ -65,3 +65,4 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           files: artifacts/comet-win-x64-${{ steps.version.outputs.tag }}.zip
+

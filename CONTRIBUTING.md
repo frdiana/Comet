@@ -1,11 +1,11 @@
 ---
-title: Contributing to CosmosDbComet
+title: Contributing to comet
 description: Contribution guide for commits, pull requests, local checks, and releases
 ---
 
 ## Contributing
 
-Thanks for helping improve CosmosDbComet. This project is a small .NET CLI, so
+Thanks for helping improve comet. This project is a small .NET CLI, so
 changes should stay focused, readable, and easy to verify locally.
 
 ## Local Setup
@@ -100,10 +100,10 @@ own command file and, when useful, its own settings file.
 Preferred layout:
 
 ```text
-src/CosmosDbComet/Commands/CreateDbCommand.cs
-src/CosmosDbComet/Commands/CreateDbSettings.cs
-src/CosmosDbComet/Commands/CloneDbCommand.cs
-src/CosmosDbComet/Commands/CloneDbSettings.cs
+src/comet/Commands/CreateDbCommand.cs
+src/comet/Commands/CreateDbSettings.cs
+src/comet/Commands/CloneDbCommand.cs
+src/comet/Commands/CloneDbSettings.cs
 ```
 
 Command classes should stay thin. They should parse settings, validate input,
@@ -138,7 +138,8 @@ LICENSE
 
 ## Scope
 
-CosmosDbComet is intended for small and medium Cosmos DB moves. Do not add
+comet is intended for small and medium Cosmos DB moves. Do not add
 features that imply support for million-document migrations, continuous
 replication, or zero-downtime cutovers unless the project explicitly changes
 scope.
+

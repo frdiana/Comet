@@ -1,13 +1,13 @@
 ---
-title: CosmosDbComet
+title: comet
 description: Small C# CLI for creating and cloning Azure Cosmos DB databases
 ---
 
-## CosmosDbComet
+## comet
 
 Fast, flashy, and it burns up on big loads. Not enterprise-ready.
 
-CosmosDbComet is a small `Spectre.Console` CLI for moving small Cosmos DB
+comet is a small `Spectre.Console` CLI for moving small Cosmos DB
 databases between accounts. It can create a database with a declared set of
 containers, clone an existing database, and skip containers you do not want to
 copy.
@@ -145,6 +145,7 @@ comet run --from-file comet.json --dry-run
 
 ## Limits
 
-CosmosDbComet is for small and medium moves. Use Azure-native migration tools,
+comet is for small and medium moves. Use Azure-native migration tools,
 custom pipelines, or change-feed based processes for large migrations,
 production-grade replication, or online cutovers.
+

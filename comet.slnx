@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/comet/comet.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/comet.Tests/comet.Tests.csproj" />
+  </Folder>
+</Solution>
+
